@@ -10,7 +10,7 @@
   "linkedin": "https://www.linkedin.com/in/wildluck",
   "telegram": "@McSuudi",
   "cv_pdf": "/static/cv.pdf",
-  "about": "Systems programmer with 3+ years of experience building high-performance network and storage software in C/C++. At Huawei worked deep in the Linux networking stack using DPDK for packet processing. Currently at Wellstor working on storage systems with SPDK. Care about clean low-level code, performance, and understanding how things actually work.",
+  "about": "Systems programmer with 4+ years of experience building high-performance network and storage software in C/C++. At Huawei worked deep in the Linux networking stack using DPDK for packet processing. Currently at Wellstor working on storage systems with SPDK. Care about clean low-level code, performance, and understanding how things actually work.",
   "meta_description": "Portfolio of Rishat Maksudov - C/C++ Software Engineer specialising in networking and storage.",
   "meta_og_image": "/static/og-image.png",
   "site_url": "https://www.wildluck.dev",
