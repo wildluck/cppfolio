@@ -1,7 +1,4 @@
 #include <crow.h>
-#include <crow/app.h>
-#include <crow/http_response.h>
-#include <crow/logging.h>
 #include <cstdint>
 #include <cstdlib>
 #include <string>
@@ -30,18 +27,6 @@ int main()
     CROW_ROUTE(app, "/about"   )([]() { return html_response(portfolio::pages::about);    });
     CROW_ROUTE(app, "/projects")([]() { return html_response(portfolio::pages::projects); });
     CROW_ROUTE(app, "/contact" )([]() { return html_response(portfolio::pages::contact);  });
-
-    // CROW_ROUTE(app, "/static/<path>")(
-    //     [](const crow::request&, crow::response& res, const std::string& path) {
-    //         if (path.find("..") != std::string::npos) {
-    //             res = crow::response{403};
-    //             res.end();
-    //             return;
-    //         }
-    //         res.set_static_file_info("static/" + path);
-    //         res.end();
-    //     }
-    // );
 
     CROW_ROUTE(app, "/healthz")([]() {
         return crow::response{200, "ok"};
