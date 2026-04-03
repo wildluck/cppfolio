@@ -1,0 +1,45 @@
+{{meta title="Projects" nav="projects"}}
+
+<div class="page-header">
+    <p class="section-label">work &amp; open source</p>
+    <h1>Projects</h1>
+    <p>Things I have built and maintain.</p>
+</div>
+
+<section class="section">
+    <div class="grid-2">
+        {{#each PROJECTS as project}}
+        <div class="card project-card">
+            <div class="project-card-header">
+                <span class="project-card-name">{{project.name}}</span>
+                <a
+                    href="{{project.url}}"
+                    target="_blank"
+                    rel="noopener"
+                    class="project-card-link"
+                    >↗ source</a
+                >
+            </div>
+            <p class="project-card-desc">{{project.description}}</p>
+            <div class="project-card-tags">
+                {{#each project.tags as tag}}
+                <span class="tag">{{tag}}</span>
+                {{/each}}
+            </div>
+            <a
+                href="{{project.url}}"
+                target="_blank"
+                rel="noopener"
+                style="
+                    font-family: var(--mono);
+                    font-size: 0.75rem;
+                    color: var(--accent);
+                    margin-top: 0.25rem;
+                "
+            >
+                View on GitHub →
+            </a>
+        </div>
+        {{/each}}
+    </div>
+</section>

@@ -1,0 +1,7 @@
+# Build output
+build/
+
+# Generated header
+generated/
+
+.vscode/

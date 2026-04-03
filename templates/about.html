@@ -1,0 +1,63 @@
+{{meta title="About" nav="about"}}
+
+<div class="page-header">
+    <p class="section-label">about me</p>
+    <h1>{{name}}</h1>
+    <p>{{position}} - {{location}}</p>
+</div>
+
+<!-- About text -->
+<section class="section">
+    <div class="card" style="max-width: 760px">
+        <p style="font-size: 1rem; line-height: 1.8; color: var(--text2)">
+            {{about}}
+        </p>
+    </div>
+</section>
+
+<!-- Experience -->
+<section class="section">
+    <p class="section-label">experience</p>
+    <div class="timeline">
+        {{#each EXPERIENCE as exp}}
+        <div class="timeline-item">
+            <div class="timeline-line">
+                <div class="timeline-dot"></div>
+                <div class="timeline-track"></div>
+            </div>
+            <div class="timeline-content">
+                <p class="timeline-period">{{exp.period}}</p>
+                <p class="timeline-role">{{exp.role}}</p>
+                <p class="timeline-company">{{exp.company}}</p>
+                <p class="timeline-desc">{{exp.description}}</p>
+                <ul class="timeline-achievements">
+                    {{#each exp.achievements as achievement}}
+                    <li>{{achievement}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</section>
+
+<!-- Education -->
+<section class="section">
+    <p class="section-label">education</p>
+    <div class="timeline">
+        {{#each EDUCATION as edu}}
+        <div class="timeline-item">
+            <div class="timeline-line">
+                <div class="timeline-dot"></div>
+                <div class="timeline-track"></div>
+            </div>
+            <div class="timeline-content">
+                <p class="timeline-period">{{edu.period}}</p>
+                <p class="timeline-role">{{edu.degree}}</p>
+                <p class="timeline-company">{{edu.institution}}</p>
+                <p class="timeline-desc">{{edu.direction}}</p>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</section>

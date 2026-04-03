@@ -1,0 +1,73 @@
+{{meta title="Contact" nav="contact"}}
+
+<div class="page-header">
+    <p class="section-label">get in touch</p>
+    <h1>Contact</h1>
+    <p>Open to interesting projects, roles, and collaborations.</p>
+</div>
+
+<section class="section">
+    <div style="display: grid; gap: 1rem; max-width: 560px">
+        <div class="card contact-card">
+            <div class="contact-icon">@</div>
+            <div>
+                <p class="contact-label">Email</p>
+                <p class="contact-value">
+                    <a href="mailto:{{email}}">{{email}}</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="card contact-card">
+            <div class="contact-icon">gh</div>
+            <div>
+                <p class="contact-label">GitHub</p>
+                <p class="contact-value">
+                    <a href="{{github}}" target="_blank" rel="noopener"
+                        >{{github}}</a
+                    >
+                </p>
+            </div>
+        </div>
+
+        <div class="card contact-card">
+            <div class="contact-icon">in</div>
+            <div>
+                <p class="contact-label">LinkedIn</p>
+                <p class="contact-value">
+                    <a href="{{linkedin}}" target="_blank" rel="noopener"
+                        >{{linkedin}}</a
+                    >
+                </p>
+            </div>
+        </div>
+
+        <div class="card contact-card">
+            <div class="contact-icon">tg</div>
+            <div>
+                <p class="contact-label">Telegram</p>
+                <p class="contact-value">
+                    <a
+                        href="https://t.me/{{telegram}}"
+                        target="_blank"
+                        rel="noopener"
+                        >{{telegram}}</a
+                    >
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <p
+        style="
+            margin-top: 2.5rem;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: var(--text3);
+        "
+    >
+        Based in <span style="color: var(--text2)">{{location}}</span>.
+        Currently <span style="color: var(--accent)">available</span> for remote
+        work.
+    </p>
+</section>

@@ -1,0 +1,99 @@
+{
+  "name": "Rishat Maksudov",
+  "position": "Software Engineer (C/C++ Developer)",
+  "tagline": "Systems programmer focused on networking and storage.",
+  "location": "Tashkent, Uzbekistan",
+  "available": "true",
+  "available_label": "Available for work",
+  "email": "orish.maks@gmail.com",
+  "github": "https://github.com/wildluck",
+  "linkedin": "https://www.linkedin.com/in/wildluck",
+  "telegram": "@McSuudi",
+  "cv_pdf": "/static/cv.pdf",
+  "about": "Systems programmer with 3+ years of experience building high-performance network and storage software in C/C++. At Huawei worked deep in the Linux networking stack using DPDK for packet processing. Currently at Wellstor working on storage systems with SPDK. Care about clean low-level code, performance, and understanding how things actually work.",
+  "meta_description": "Portfolio of Rishat Maksudov - C/C++ Software Engineer specialising in networking and storage.",
+  "meta_og_image": "/static/og-image.png",
+  "site_url": "https://www.wildluck.dev",
+
+  "skills_core": [
+    { "name": "C", "level": "95" },
+    { "name": "C++", "level": "70" },
+    { "name": "Linux/POSIX", "level": "88" },
+    { "name": "Networking", "level": "85" },
+    { "name": "DPDK", "level": "82" },
+    { "name": "SPDK", "level": "78" },
+    { "name": "eBPF/NFQ", "level": "75" },
+    { "name": "NVMe-oF", "level": "72" },
+    { "name": "Bash/Shell", "level": "80" },
+    { "name": "Python", "level": "72" }
+  ],
+  "skills_tools": [
+    { "name": "GDB", "level": "82" },
+    { "name": "Valgrind", "level": "78" },
+    { "name": "perf/FlameGraph", "level": "75" },
+    { "name": "tcpdump/Wireshark", "level": "78" },
+    { "name": "pytest", "level": "70" },
+    { "name": "Make/CMake", "level": "68" },
+    { "name": "RPM/Spec", "level": "65" },
+    { "name": "systemd", "level": "70" },
+    { "name": "Git", "level": "80" },
+    { "name": "Docker", "level": "55" }
+  ],
+
+  "languages": [
+    { "name": "Russian", "level": "Native" },
+    { "name": "English", "level": "Advanced" }
+  ],
+
+  "experience": [
+    {
+      "company": "Huawei",
+      "role": "Junior Software Engineer",
+      "period": "July 2021 - November 2024",
+      "description": "Worked on router IoT/SOHO/AP firmware (CLI, NAT subsystem) for the first half, then moved to eNSP Pro (Lite) - Huawei's enterprise network simulation platform - building virtual wireless infrastructure with eBPF and NFQ.",
+      "achievements": [
+        "Maintained and extended legacy NAT subsystem in C - refactored NAT rule handling and fixed ALG (Application Layer Gateway) parsing for PPTP and H.323 protocols where standard port-based NAT was insufficient",
+        "Fixed NAT ALG packet classification bugs where L4 port parsing was bypassed in favour of application-layer inspection - restored correct traversal for PPTP, FTP, and DNS protocol flows",
+        "Built virtual wireless network infrastructure for eNSP Pro (supports ~20 concurrent virtual devices) using NFQ (nfqd) and eBPF - software-defined packet interception and forwarding between virtual interfaces",
+        "Implemented roaming logic for virtual mobile clients between access points - proximity-based AP selection with seamless handoff across the virtual topology",
+        "Designed and implemented ebridge - a virtual Ethernet bridge connecting interfaces across two devices into a shared L2 segment, supporting arbitrary interface counts"
+      ]
+    },
+    {
+      "company": "Wellstor",
+      "role": "Software Engineer",
+      "period": "January 2025 - present",
+      "description": "Building block storage software on SPDK - RPC disk management, inter-node heartbeat for configuration consistency, and NVMe/io_uring device handling.",
+      "achievements": [
+        "Fixed critical blocking bug in disk heartbeat - TCP NVMe-oF connect was synchronous, causing up to ~2 minute stalls per failed node (6 retries × 20s timeout); replaced with non-blocking connect and immediate failover",
+        "Implemented RPC command layer for NVMe and io_uring disk management via SPDK - device discovery, hot-plug handling, and lifecycle control",
+        "Designed inter-node disk heartbeat for configuration synchronisation - coordinates disk topology, splits, and RAID state across cluster nodes before backup commits",
+        "Built disk health validation tooling - sequential and random read/write tests with per-disk pass/fail reporting"
+      ]
+    }
+  ],
+
+  "education": [
+    {
+      "institution": "Academic Lyceum under Westminster University in Tashkent",
+      "degree": "Secondary education",
+      "direction": "Exact sciences",
+      "period": "September 2014 - May 2017"
+    },
+    {
+      "institution": "Innopolis University",
+      "degree": "Bachelor's degree",
+      "direction": "Software Engineering",
+      "period": "September 2017 - May 2021"
+    }
+  ],
+
+  "projects": [
+    {
+      "name": "CppFolio",
+      "description": "Zero-JS portfolio server in C++23 with Crow. HTML templates and personal data baked into the binary at compile time via a Python codegen step.",
+      "url": "https://github.com/wildluck/cppfolio",
+      "tags": ["C++23", "Crow", "CMake", "Python"]
+    }
+  ]
+}
