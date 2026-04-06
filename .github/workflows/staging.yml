@@ -19,7 +19,9 @@ jobs:
             git fetch origin
             git checkout testing
             git pull origin testing
-            docker build -t cppfolio:staging ./portfolio
+
+            # portfolio staging
+            docker build -f portfolio/Dockerfile -t cppfolio:staging .
             docker stop cppfolio-staging || true
             docker rm cppfolio-staging || true
             docker run -d \
@@ -27,3 +29,13 @@ jobs:
               --restart unless-stopped \
               -p 8081:8080 \
               cppfolio:staging
+
+              # blog staging
+              docker build -f blog/Dockerfile -t cppblog:staging .
+              docker stop cppblog-staging || true
+              docker rm cppblog-staging || true
+              docker run -d \
+                --name cppblog-staging \
+                --restart unless-stopped \
+                -p 8083:8080 \
+                cppblog:staging

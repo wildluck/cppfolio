@@ -19,7 +19,9 @@ jobs:
             git fetch origin
             git checkout deploy
             git pull origin deploy
-            docker build -t cppfolio:latest ./portfolio
+
+            # portfolio production
+            docker build -f portfolio/Dockerfile -t cppfolio:latest .
             docker stop cppfolio || true
             docker rm cppfolio || true
             docker run -d \
@@ -27,3 +29,13 @@ jobs:
               --restart unless-stopped \
               -p 8080:8080 \
               cppfolio:latest
+
+            # blog production
+            docker build -f blog/Dockerfile -t cppblog:latest .
+            docker stop cppblog || true
+            docker rm cppblog || true
+            docker run -d \
+              --name cppblog \
+              --restart unless-stopped \
+              -p 8082:8080 \
+              cppblog:latest
