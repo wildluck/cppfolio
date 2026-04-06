@@ -1,0 +1,116 @@
+{{meta title="Resume" nav="resume"}}
+
+<div class="page-header">
+    <p class="section-label">curriculum vitae</p>
+    <h1>Resume</h1>
+    <p>{{position}} — {{location}}</p>
+    <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap">
+        <a href="{{cv_pdf}}" target="_blank" class="btn btn-primary"
+            >Download PDF</a
+        >
+        <a href="mailto:{{email}}" class="btn btn-ghost">{{email}}</a>
+    </div>
+</div>
+
+<!-- Summary -->
+<section class="section">
+    <p class="section-label">about</p>
+    <div class="card" style="max-width: 760px">
+        <p style="font-size: 1rem; line-height: 1.8; color: var(--text2)">
+            {{about}}
+        </p>
+    </div>
+</section>
+
+<!-- Skills -->
+<section class="section">
+    <p class="section-label">skills</p>
+    <div class="grid-2">
+        <div class="card">
+            <p class="card-sublabel">Languages &amp; Core</p>
+            <div class="tag-cloud">
+                {{#each SKILLS_CORE as skill}}
+                <span class="tag">{{skill.name}}</span>
+                {{/each}}
+            </div>
+        </div>
+        <div class="card">
+            <p class="card-sublabel">Tools &amp; Infra</p>
+            <div class="tag-cloud">
+                {{#each SKILLS_TOOLS as skill}}
+                <span class="tag">{{skill.name}}</span>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Experience -->
+<section class="section">
+    <p class="section-label">experience</p>
+    <div class="timeline">
+        {{#each EXPERIENCE as exp}}
+        <div class="timeline-item">
+            <div class="timeline-line">
+                <div class="timeline-dot"></div>
+                <div class="timeline-track"></div>
+            </div>
+            <div class="timeline-content">
+                <p class="timeline-period">{{exp.period}}</p>
+                <p class="timeline-role">{{exp.role}}</p>
+                <p class="timeline-company">{{exp.company}}</p>
+                <p class="timeline-desc">{{exp.description}}</p>
+                <ul class="timeline-achievements">
+                    {{#each exp.achievements as achievement}}
+                    <li>{{achievement}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</section>
+
+<!-- Education -->
+<section class="section">
+    <p class="section-label">education</p>
+    <div class="timeline">
+        {{#each EDUCATION as edu}}
+        <div class="timeline-item">
+            <div class="timeline-line">
+                <div class="timeline-dot"></div>
+                <div class="timeline-track"></div>
+            </div>
+            <div class="timeline-content">
+                <p class="timeline-period">{{edu.period}}</p>
+                <p class="timeline-role">{{edu.degree}}</p>
+                <p class="timeline-company">{{edu.institution}}</p>
+                <p class="timeline-desc">{{edu.direction}}</p>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</section>
+
+<!-- Languages -->
+<section class="section">
+    <p class="section-label">languages</p>
+    <div class="grid-3">
+        {{#each LANGUAGES as lang}}
+        <div
+            class="card"
+            style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+            "
+        >
+            <span style="font-weight: 600; font-size: 0.95rem"
+                >{{lang.name}}</span
+            >
+            <span class="tag">{{lang.level}}</span>
+        </div>
+        {{/each}}
+    </div>
+</section>

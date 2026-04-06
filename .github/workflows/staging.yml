@@ -1,0 +1,29 @@
+name: deploy-staging
+
+on:
+  push:
+    branches: [testing]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to staging vis SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+          script: |
+            cd ~/cppfolio
+            git fetch origin
+            git checkout testing
+            git pull origin testing
+            docker build -t cppfolio:staging ./portfolio
+            docker stop cppfolio-staging || true
+            docker rm cppfolio-staging || true
+            docker run -d \
+              --name cppfolio-staging \
+              --restart unless-stopped \
+              -p 8081:8080 \
+              cppfolio:staging

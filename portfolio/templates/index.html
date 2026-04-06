@@ -22,58 +22,20 @@
     <p class="section-label">skills</p>
     <div class="grid-2">
         <div class="card">
-            <p
-                style="
-                    font-family: var(--mono);
-                    font-size: 0.7rem;
-                    letter-spacing: 0.1em;
-                    color: var(--text3);
-                    margin-bottom: 1.25rem;
-                "
-            >
-                LANGUAGES & CORE
-            </p>
-            {{#each SKILLS_CORE as skill}}
-            <div class="skill-bar">
-                <div class="skill-bar-header">
-                    <span class="skill-bar-name">{{skill.name}}</span>
-                    <span class="skill-bar-pct">{{skill.level}}%</span>
-                </div>
-                <div class="skill-bar-track">
-                    <div
-                        class="skill-bar-fill"
-                        style="width: {{skill.level}}%"
-                    ></div>
-                </div>
+            <p class="card-sublabel">Languages &amp; Core</p>
+            <div class="tag-cloud">
+                {{#each SKILLS_CORE as skill}}
+                <span class="tag">{{skill.name}}</span>
+                {{/each}}
             </div>
-            {{/each}}
         </div>
         <div class="card">
-            <p
-                style="
-                    font-family: var(--mono);
-                    font-size: 0.7rem;
-                    letter-spacing: 0.1em;
-                    color: var(--text3);
-                    margin-bottom: 1.25rem;
-                "
-            >
-                TOOLS & INFRA
-            </p>
-            {{#each SKILLS_TOOLS as skill}}
-            <div class="skill-bar">
-                <div class="skill-bar-header">
-                    <span class="skill-bar-name">{{skill.name}}</span>
-                    <span class="skill-bar-pct">{{skill.level}}%</span>
-                </div>
-                <div class="skill-bar-track">
-                    <div
-                        class="skill-bar-fill"
-                        style="width: {{skill.level}}%"
-                    ></div>
-                </div>
+            <p class="card-sublabel">Tools &amp; Infra</p>
+            <div class="tag-cloud">
+                {{#each SKILLS_TOOLS as skill}}
+                <span class="tag">{{skill.name}}</span>
+                {{/each}}
             </div>
-            {{/each}}
         </div>
     </div>
 </section>

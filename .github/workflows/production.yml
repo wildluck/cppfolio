@@ -1,0 +1,29 @@
+name: deploy-production
+
+on:
+  push:
+    branches: [deploy]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deployu to production via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+          script: |
+            cd ~/cppfolio
+            git fetch origin
+            git checkout deploy
+            git pull origin deploy
+            docker build -t cppfolio:latest ./portfolio
+            docker stop cppfolio || true
+            docker rm cppfolio || true
+            docker run -d \
+              --name cppfolio \
+              --restart unless-stopped \
+              -p 8080:8080 \
+              cppfolio:latest

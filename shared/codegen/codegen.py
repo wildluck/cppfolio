@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """
 codegen.py - CppFolio prebuild code generator
-Reads: data/portfolio.json + templates/*.html
+Reads: data/data.json + templates/*.html
 Emits: generated/data.hpp + generated/pages.hpp
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import re
 import sys
@@ -14,12 +15,30 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 # ── Paths ──────────────────────────────────────────────────────────────────
-ROOT = Path(__file__).parent.parent
-DATA_FILE = ROOT / "data" / "portfolio.json"
-TPL_DIR = ROOT / "templates"
-OUT_DIR = ROOT / "generated"
+parser = argparse.ArgumentParser()
+parser.add_argument("--project", required=True, choices=["portfolio", "blog"])
+args = parser.parse_args()
 
-PAGES = ["index", "about", "projects", "contact"]
+ROOT = Path(__file__).parent.parent.parent
+DATA_FILE = ROOT / "shared" / "data" / args.project / "data.json"
+TPL_DIR = ROOT / args.project / "templates"
+OUT_DIR = ROOT / args.project / "generated"
+SHARED_TPL_DIR = ROOT / "shared" / "templates"
+
+PAGES = [
+    "index",
+    "about",
+    "projects",
+    "contact",
+    "resume",
+    "uses",
+    "now",
+    "testimonials",
+    "hire",
+    "changelog",
+    "not_found",
+    "explore",
+]
 
 
 # ── Segment types ──────────────────────────────────────────────────────────
@@ -62,7 +81,7 @@ def load_json() -> tuple[dict, dict]:
     try:
         raw = json.loads(DATA_FILE.read_text(encoding="utf-8"))
     except json.JSONDecodeError as e:
-        sys.exit(f"ERROR: portfolio.json: {e}")
+        sys.exit(f"ERROR: data.json: {e}")
 
     scalars = {}
     arrays = {}
@@ -97,11 +116,14 @@ def c_escape(s: str) -> str:
 
 def resolve_includes(source: str, stack: list[str]) -> str:
     def replacer(m):
-        path = TPL_DIR / m.group(1).strip()
+        partial = m.group(1).strip()
+        path = TPL_DIR / partial
+        if not path.exists():
+            path = SHARED_TPL_DIR / partial
+        if not path.exists():
+            sys.exit(f"ERROR: include not found: {partial}")
         if str(path) in stack:
             sys.exit(f"ERROR: circular include: {' -> '.join(stack + [str(path)])}")
-        if not path.exists():
-            sys.exit(f"ERROR: include not found: {path}")
         content = path.read_text(encoding="utf-8")
         return resolve_includes(content, stack + [str(path)])
 
@@ -348,12 +370,15 @@ def emit_data_hpp(scalars: dict, arrays: dict) -> None:
         )
 
     STRUCT_MAP = {
-        "skills_core": ("Skill", ["name", "level"]),
-        "skills_tools": ("Skill", ["name", "level"]),
+        "skills_core": ("Skill", ["name"]),
+        "skills_tools": ("Skill", ["name"]),
         "languages": ("Language", ["name", "level"]),
         "experience": ("Experience", ["company", "role", "period", "description"]),
         "education": ("Education", ["institution", "degree", "direction", "period"]),
         "projects": ("Project", ["name", "description", "url"]),
+        "uses": ("Uses", ["category"]),
+        "testimonials": ("Testimonial", ["name", "role", "company", "text"]),
+        "changelog": ("Changelog", ["version", "date"]),
     }
 
     lines.append("")
@@ -386,6 +411,8 @@ def emit_data_hpp(scalars: dict, arrays: dict) -> None:
     NESTED_MAP = {
         "experience": "achievements",
         "projects": "tags",
+        "uses": "items",
+        "changelog": "changes",
     }
 
     for array_key, nested_key in NESTED_MAP.items():

@@ -1,0 +1,40 @@
+{{meta title="Uses" nav="uses"}}
+
+<div class="page-header">
+    <p class="section-label">setup</p>
+    <h1>Uses</h1>
+    <p>Hardware, software, and tools I use daily.</p>
+</div>
+
+<section class="section">
+    <div class="grid-2">
+        {{#each USES as use}}
+        <div class="card">
+            <p class="card-sublabel">{{use.category}}</p>
+            <ul style="list-style: none; display: grid; gap: 0.5rem">
+                {{#each use.items as item}}
+                <li
+                    style="
+                        font-family: var(--mono);
+                        font-size: 0.82rem;
+                        color: var(--text2);
+                        padding-left: 1rem;
+                        position: relative;
+                    "
+                >
+                    <span
+                        style="
+                            position: absolute;
+                            left: 0;
+                            color: var(--accent);
+                        "
+                        >▸</span
+                    >
+                    {{item}}
+                </li>
+                {{/each}}
+            </ul>
+        </div>
+        {{/each}}
+    </div>
+</section>

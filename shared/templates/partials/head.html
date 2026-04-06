@@ -529,5 +529,38 @@
             font-size: 1rem;
             color: var(--text2);
         }
+        .card-sublabel {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text3);
+            margin-bottom: 1rem;
+        }
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .explore-card {
+            display: block;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .explore-card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.35rem;
+            transition: color var(--transition);
+        }
+        .explore-card:hover .explore-card-title {
+            color: var(--accent);
+        }
+        .explore-card-desc {
+            font-size: 0.88rem;
+            color: var(--text2);
+            line-height: 1.55;
+        }
     </style>
 </head>

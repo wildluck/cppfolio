@@ -1,7 +1,10 @@
 # Build output
-build/
+portfolio/build/
+blog/build/
 
 # Generated header
-generated/
+portfolio/generated/
+blog/generated/
 
 .vscode/
+.dockerignore

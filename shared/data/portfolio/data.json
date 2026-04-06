@@ -1,0 +1,150 @@
+{
+  "name": "Rishat Maksudov",
+  "position": "Software Engineer (C/C++ Developer)",
+  "tagline": "Systems programmer focused on networking and storage.",
+  "location": "Tashkent, Uzbekistan",
+  "available": "true",
+  "available_label": "Available for work",
+  "email": "orish.maks@gmail.com",
+  "github": "https://github.com/wildluck",
+  "linkedin": "https://www.linkedin.com/in/wildluck",
+  "telegram": "McSuudi",
+  "cv_pdf": "/static/cv.pdf",
+  "about": "Systems programmer with 4+ years of experience building high-performance network and storage software in C/C++. At Huawei worked deep in the Linux networking stack using DPDK for packet processing. Currently at Wellstor working on storage systems with SPDK. Care about clean low-level code, performance, and understanding how things actually work.",
+  "meta_description": "Portfolio of Rishat Maksudov - C/C++ Software Engineer specialising in networking and storage.",
+  "meta_og_image": "/static/og-image.png",
+  "site_url": "https://www.wildluck.dev",
+
+  "skills_core": [
+    { "name": "C" },
+    { "name": "C++" },
+    { "name": "Linux/POSIX" },
+    { "name": "Networking" },
+    { "name": "DPDK" },
+    { "name": "SPDK" },
+    { "name": "eBPF/NFQ" },
+    { "name": "NVMe-oF" },
+    { "name": "Bash/Shell" },
+    { "name": "Python" }
+  ],
+  "skills_tools": [
+    { "name": "GDB" },
+    { "name": "Valgrind" },
+    { "name": "perf/FlameGraph" },
+    { "name": "tcpdump/Wireshark" },
+    { "name": "pytest" },
+    { "name": "Make/CMake" },
+    { "name": "RPM/Spec" },
+    { "name": "systemd" },
+    { "name": "Git" },
+    { "name": "Docker" }
+  ],
+
+  "languages": [
+    { "name": "Russian", "level": "Native" },
+    { "name": "English", "level": "Advanced" }
+  ],
+
+  "experience": [
+    {
+      "company": "Wellstor",
+      "role": "Software Engineer",
+      "period": "January 2025 - present",
+      "description": "Building block storage software on SPDK - RPC disk management, inter-node heartbeat for configuration consistency, and NVMe/io_uring device handling.",
+      "achievements": [
+        "Fixed critical blocking bug in disk heartbeat - TCP NVMe-oF connect was synchronous, causing up to ~2 minute stalls per failed node (6 retries × 20s timeout); replaced with non-blocking connect and immediate failover",
+        "Implemented RPC command layer for NVMe and io_uring disk management via SPDK - device discovery, hot-plug handling, and lifecycle control",
+        "Designed inter-node disk heartbeat for configuration synchronisation - coordinates disk topology, splits, and RAID state across cluster nodes before backup commits",
+        "Built disk health validation tooling - sequential and random read/write tests with per-disk pass/fail reporting"
+      ]
+    },
+    {
+      "company": "Huawei",
+      "role": "Junior Software Engineer",
+      "period": "July 2021 - November 2024",
+      "description": "Worked on router IoT/SOHO/AP firmware (CLI, NAT subsystem) for the first half, then moved to eNSP Pro (Lite) - Huawei's enterprise network simulation platform - building virtual wireless infrastructure with eBPF and NFQ.",
+      "achievements": [
+        "Maintained and extended legacy NAT subsystem in C - refactored NAT rule handling and fixed ALG (Application Layer Gateway) parsing for PPTP, FTP, RTSP, and TFTP protocols where standard port-based NAT was insufficient",
+        "Fixed NAT ALG packet classification bugs where L4 port parsing was bypassed in favour of application-layer inspection - restored correct traversal for PPTP, FTP, and DNS protocol flows",
+        "Built virtual wireless network infrastructure for eNSP Pro (supports ~20 concurrent virtual devices) using NFQ (nfqd) and eBPF - software-defined packet interception and forwarding between virtual interfaces",
+        "Implemented roaming logic for virtual mobile clients between access points - proximity-based AP selection with seamless handoff across the virtual topology",
+        "Designed and implemented ebridge - a virtual Ethernet bridge connecting interfaces across two devices into a shared L2 segment, supporting arbitrary interface counts"
+      ]
+    }
+  ],
+
+  "education": [
+    {
+      "institution": "Academic Lyceum under Westminster University in Tashkent",
+      "degree": "Secondary education",
+      "direction": "Exact sciences",
+      "period": "September 2014 - May 2017"
+    },
+    {
+      "institution": "Innopolis University",
+      "degree": "Bachelor's degree",
+      "direction": "Software Engineering",
+      "period": "September 2017 - May 2021"
+    }
+  ],
+
+  "projects": [
+    {
+      "name": "CppFolio",
+      "description": "Zero-JS portfolio server in C++23 with Crow. HTML templates and personal data baked into the binary at compile time via a Python codegen step.",
+      "url": "https://github.com/wildluck/cppfolio",
+      "tags": ["C++23", "Crow", "CMake", "Python"]
+    }
+  ],
+
+  "now": "Currently working at Wellstor on SPDK-based block storage. Building this portfolio site in C++23. Learning more about distributed storage systems and NVMe-oF internals. Reading 'Computer Networks' by Tanenbaum.",
+  "uses": [
+    {
+      "category": "Hardware",
+      "items": [
+        "HP Envy x360 - Intel Core Ultra 7 155U, 14 cores",
+        "MSI 34\" ultrawide monitor",
+        "Ardor Guardian/Wakizashi keyboard",
+        "Ardor Ulta mouse"
+      ]
+    },
+    {
+      "category": "Editor",
+      "items": ["Zed", "Neovim"]
+    },
+    {
+      "category": "Terminal",
+      "items": ["Zsh", "tmux"]
+    },
+    {
+      "category": "Dev tools",
+      "items": [
+        "GDB",
+        "Valgrind",
+        "perf",
+        "FlameGraph",
+        "tcpdump",
+        "Wireshark",
+        "Docker"
+      ]
+    },
+    {
+      "category": "OS",
+      "items": ["Arch Linux (daily driver)", "Ubuntu (servers)"]
+    }
+  ],
+
+  "testimonials": [],
+
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "April 2026",
+      "changes": [
+        "Initial launch - portfolio built in C++23 with Crow",
+        "HTML baked into binary at compile time via Python codegen",
+        "Deployed on VPS with Caddy + automatic HTTPS"
+      ]
+    }
+  ]
+}
