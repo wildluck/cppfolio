@@ -14,9 +14,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /src
 COPY . .
 
-RUN cmake -S . -B build \
+RUN cmake -S blog -B blog/build \
     -DCMAKE_BUILD_TYPE=Release \
-    && cmake --build build --parallel "$(nproc)"
+    && cmake --build blog/build --parallel "$(nproc)"
 
 FROM debian:bookworm-slim AS runtime
 
@@ -27,10 +27,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-COPY --from=builder /src/build/cppfolio ./cppfolio
-COPY --from=builder /src/static ./static
+COPY --from=builder /src/blog/build/cppblog ./cppblog
+COPY --from=builder /src/blog/static ./static
 
 ENV PORT=8080
 EXPOSE 8080
 
-ENTRYPOINT [ "./cppfolio" ]
+ENTRYPOINT ["./cppblog"]

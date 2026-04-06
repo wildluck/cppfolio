@@ -14,16 +14,16 @@ import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
-# ── Paths ──────────────────────────────────────────────────────────────────
 parser = argparse.ArgumentParser()
 parser.add_argument("--project", required=True, choices=["portfolio", "blog"])
 args = parser.parse_args()
 
 ROOT = Path(__file__).parent.parent.parent
-DATA_FILE = ROOT / "shared" / "data" / args.project / "data.json"
-TPL_DIR = ROOT / args.project / "templates"
-OUT_DIR = ROOT / args.project / "generated"
 SHARED_TPL_DIR = ROOT / "shared" / "templates"
+
+TPL_DIR = None
+OUT_DIR = None
+
 
 PAGES = [
     "index",
@@ -39,9 +39,6 @@ PAGES = [
     "not_found",
     "explore",
 ]
-
-
-# ── Segment types ──────────────────────────────────────────────────────────
 
 
 @dataclass
@@ -72,14 +69,11 @@ class LoopBlock:
     inner: list = field(default_factory=list)
 
 
-# ── Step 1: load JSON ──────────────────────────────────────────────────────
-
-
-def load_json() -> tuple[dict, dict]:
-    if not DATA_FILE.exists():
-        sys.exit(f"ERROR: {DATA_FILE} not found")
+def load_json(data_file: Path) -> tuple[dict, dict]:
+    if not data_file.exists():
+        sys.exit(f"ERROR: {data_file} not found")
     try:
-        raw = json.loads(DATA_FILE.read_text(encoding="utf-8"))
+        raw = json.loads(data_file.read_text(encoding="utf-8"))
     except json.JSONDecodeError as e:
         sys.exit(f"ERROR: data.json: {e}")
 
@@ -98,9 +92,6 @@ def load_json() -> tuple[dict, dict]:
     return scalars, arrays
 
 
-# ── Helpers ────────────────────────────────────────────────────────────────
-
-
 def c_escape(s: str) -> str:
     """Escape a string for use inside fixed_str("...") in C++."""
     return (
@@ -109,9 +100,6 @@ def c_escape(s: str) -> str:
         .replace("\n", "\\n")
         .replace("\t", "\\t")
     )
-
-
-# ── Step 2: resolve includes ───────────────────────────────────────────────
 
 
 def resolve_includes(source: str, stack: list[str]) -> str:
@@ -130,9 +118,6 @@ def resolve_includes(source: str, stack: list[str]) -> str:
     return re.sub(r"\{\{include (.+?)\}\}", replacer, source)
 
 
-# ── Step 3: extract {{meta}} ───────────────────────────────────────────────
-
-
 def extract_meta(source: str) -> tuple[dict, str]:
     first_line = source.split("\n")[0].strip()
     m = re.match(r"\{\{meta (.+?)\}\}", first_line)
@@ -141,9 +126,6 @@ def extract_meta(source: str) -> tuple[dict, str]:
     attrs = dict(re.findall(r'(\w+)="([^"]+)"', m.group(1)))
     source = source[source.index("\n") + 1 :]
     return attrs, source
-
-
-# ── Step 4: parse into segments ────────────────────────────────────────────
 
 
 def find_matching_each_close(source: str, start: int) -> int:
@@ -220,9 +202,6 @@ def parse(source: str, loop_var: str | None = None) -> list:
         pos = end
 
     return segments
-
-
-# ── Emit helpers ───────────────────────────────────────────────────────────
 
 
 def emit_loop(
@@ -346,9 +325,6 @@ def build_chain(
     return " +\n        ".join(parts)
 
 
-# ── emit_data_hpp ──────────────────────────────────────────────────────────
-
-
 def emit_data_hpp(scalars: dict, arrays: dict) -> None:
     OUT_DIR.mkdir(exist_ok=True)
     lines = []
@@ -434,9 +410,6 @@ def emit_data_hpp(scalars: dict, arrays: dict) -> None:
     print(f"codegen: wrote {out}")
 
 
-# ── emit_pages_hpp ─────────────────────────────────────────────────────────
-
-
 def emit_pages_hpp(scalars: dict, arrays: dict) -> None:
     OUT_DIR.mkdir(exist_ok=True)
     lines = []
@@ -517,13 +490,223 @@ def emit_pages_hpp(scalars: dict, arrays: dict) -> None:
     print(f"codegen: wrote {out}")
 
 
-# ── main ───────────────────────────────────────────────────────────────────
+def load_blog_posts(data_dir: Path) -> list[dict]:
+    posts = []
+    for path in sorted(data_dir.glob("*.json"), reverse=True):
+        try:
+            post = json.loads(path.read_text(encoding="utf-8"))
+            post["_path"] = path
+            posts.append(post)
+        except json.JSONDecodeError as e:
+            sys.exit(f"ERROR: {path.name}: {e}")
+    return posts
+
+
+def render_content_block(block: dict) -> str:
+    """Convert a content block dict to HTML string."""
+    t = block.get("type", "p")
+    text = block.get("text", "")
+
+    if t == "h2":
+        return f"<h2>{text}</h2>"
+    elif t == "h3":
+        return f"<h3>{text}</h3>"
+    elif t == "code":
+        lang = block.get("lang", "")
+        escaped = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        return f'<pre><code class="language-{lang}">{escaped}</code></pre>'
+    elif t == "ul":
+        items = block.get("items", [])
+        lis = "\n".join(f"<li>{item}</li>" for item in items)
+        return f"<ul>\n{lis}\n</ul>"
+    elif t == "blockquote":
+        return f"<blockquote>{text}</blockquote>"
+    else:  # p
+        return f"<p>{text}</p>"
+
+
+def emit_blog_data_hpp(posts: list[dict]) -> None:
+    OUT_DIR.mkdir(exist_ok=True)
+    lines = [
+        "/* AUTO-GENERATED by scripts/codegen.py - DO NOT EDIT */",
+        "#pragma once",
+        "",
+        "#include <string_view>",
+        "",
+        "namespace blog::data {",
+        "",
+        "struct Post {",
+        "    std::string_view slug;",
+        "    std::string_view title;",
+        "    std::string_view date;",
+        "    std::string_view summary;",
+        "};",
+        "",
+        "inline constexpr Post posts[] = {",
+    ]
+    for post in posts:
+        slug = c_escape(post.get("slug", ""))
+        title = c_escape(post.get("title", ""))
+        date = c_escape(post.get("date", ""))
+        summary = c_escape(post.get("summary", ""))
+        lines.append(
+            f'    {{ R"_CV_({slug})_CV_", R"_CV_({title})_CV_",'
+            f' R"_CV_({date})_CV_", R"_CV_({summary})_CV_" }},'
+        )
+    lines += ["};", "", "} /* namespace blog::data */", ""]
+    out = OUT_DIR / "data.hpp"
+    out.write_text("\n".join(lines), encoding="utf-8")
+    print(f"codegen: wrote {out}")
+
+
+def emit_blog_pages_hpp(posts: list[dict]) -> None:
+    OUT_DIR.mkdir(exist_ok=True)
+    lines = [
+        "/* AUTO-GENERATED by scripts/codegen.py - DO NOT EDIT */",
+        "#pragma once",
+        "",
+        '#include "include/fixed_string.hpp"',
+        '#include "generated/data.hpp"',
+        "",
+        "namespace blog::pages {",
+        "",
+    ]
+
+    base_source = (TPL_DIR / "base.html").read_text(encoding="utf-8")
+    post_tpl = (TPL_DIR / "post.html").read_text(encoding="utf-8")
+
+    for post in posts:
+        slug = post.get("slug", "")
+        title = post.get("title", "")
+        date = post.get("date", "")
+        summary = post.get("summary", "")
+        tags = post.get("tags", [])
+
+        content_html = "\n".join(
+            render_content_block(b) for b in post.get("content", [])
+        )
+        tags_html = "".join(f'<span class="tag">{t}</span>' for t in tags)
+
+        post_scalars = {
+            "POST_TITLE": title,
+            "POST_DATE": date,
+            "POST_SUMMARY": summary,
+            "POST_CONTENT": content_html,
+            "POST_TAGS": tags_html,
+            "META_TITLE": title,
+            "meta_description": summary,
+            "name": "Rishat Maksudov",
+            "meta_og_image": "/static/og-image.png",
+            "site_url": "https://blog.wildluck.dev",
+            "NAV_POSTS": "",
+        }
+
+        body = post_tpl
+        for key, value in post_scalars.items():
+            body = body.replace(f"{{{{{key}}}}}", value)
+
+        full = base_source.replace("{{CONTENT}}", body)
+        full = resolve_includes(full, [str(TPL_DIR / "base.html")])
+        for key, value in post_scalars.items():
+            full = full.replace(f"{{{{{key}}}}}", value)
+
+        var_name = slug_to_var(slug)
+        escaped = c_escape(full)
+        lines.append(f"// POST: {slug}")
+        lines.append(f'inline constexpr auto {var_name} = fixed_str("{escaped}");')
+        lines.append("")
+
+    # index page
+    index_tpl = (TPL_DIR / "index.html").read_text(encoding="utf-8")
+    _, index_tpl = extract_meta(index_tpl)
+
+    post_list_html = ""
+    for post in posts:
+        slug = post.get("slug", "")
+        title = post.get("title", "")
+        date = post.get("date", "")
+        summary = post.get("summary", "")
+        tags = post.get("tags", [])
+        tags_html = "".join(f'<span class="tag">{t}</span>' for t in tags)
+        post_list_html += f"""
+        <a href="/post/{slug}" class="card post-card">
+        <div class="post-card-header">
+            <span class="post-card-date">{date}</span>
+            <div class="post-card-tags">{tags_html}</div>
+        </div>
+        <h2 class="post-card-title">{title}</h2>
+        <p class="post-card-summary">{summary}</p>
+        </a>"""
+
+    index_scalars = {
+        "POST_LIST": post_list_html,
+        "META_TITLE": "Blog",
+        "meta_description": "Systems programming, C/C++, embedded, and low-level software.",
+        "name": "Rishat Maksudov",
+        "meta_og_image": "/static/og-image.png",
+        "site_url": "https://blog.wildluck.dev",
+        "NAV_POSTS": "active",
+    }
+
+    body = index_tpl
+    for key, value in index_scalars.items():
+        body = body.replace(f"{{{{{key}}}}}", value)
+
+    full = base_source.replace("{{CONTENT}}", body)
+    full = resolve_includes(full, [str(TPL_DIR / "base.html")])
+    for key, value in index_scalars.items():
+        full = full.replace(f"{{{{{key}}}}}", value)
+
+    escaped = c_escape(full)
+    lines.append("// PAGE: index")
+    lines.append(f'inline constexpr auto index = fixed_str("{escaped}");')
+    lines.append("")
+
+    lines.append("// Auto-generated route registration")
+    lines.append("template<typename App>")
+    lines.append("inline void register_routes(App& app) {")
+    for post in posts:
+        slug = post.get("slug", "")
+        var_name = slug_to_var(slug)
+        lines.append(f'    CROW_ROUTE(app, "/post/{slug}")([]() {{')
+        lines.append(
+            f"        crow::response res{{200, std::string({var_name}.sv())}};"
+        )
+        lines.append(
+            f'        res.set_header("Content-Type", "text/html; charset=utf-8");'
+        )
+        lines.append(f"        return res;")
+        lines.append(f"    }});")
+    lines.append("}")
+    lines.append("")
+
+    lines += ["", "} /* namespace blog::pages */", ""]
+
+    out = OUT_DIR / "pages.hpp"
+    out.write_text("\n".join(lines), encoding="utf-8")
+    print(f"codegen: wrote {out}")
+
+
+def slug_to_var(slug: str) -> str:
+    return "post_" + re.sub(r"[^a-z0-9]", "_", slug.lower())
 
 
 def main():
-    scalars, arrays = load_json()
-    emit_data_hpp(scalars, arrays)
-    emit_pages_hpp(scalars, arrays)
+    global TPL_DIR, OUT_DIR
+
+    TPL_DIR = ROOT / args.project / "templates"
+    OUT_DIR = ROOT / args.project / "generated"
+
+    if args.project == "portfolio":
+        DATA_FILE = ROOT / "shared" / "data" / args.project / "data.json"
+        scalars, arrays = load_json(DATA_FILE)
+        emit_data_hpp(scalars, arrays)
+        emit_pages_hpp(scalars, arrays)
+    elif args.project == "blog":
+        DATA_FOLDER = ROOT / "shared" / "data" / args.project
+        posts = load_blog_posts(DATA_FOLDER)
+        emit_blog_data_hpp(posts)
+        emit_blog_pages_hpp(posts)
 
 
 if __name__ == "__main__":

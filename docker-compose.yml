@@ -1,0 +1,41 @@
+# for local start
+services:
+  portfolio:
+    build:
+      context: .
+      dockerfile: portfolio/Dockerfile
+    image: cppfolio:latest
+    container_name: cppfolio
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+
+  portfolio-staging:
+    build:
+      context: .
+      dockerfile: portfolio/Dockerfile
+    image: cppfolio:staging
+    container_name: cppfolio-staging
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+
+  blog:
+    build:
+      context: .
+      dockerfile: blog/Dockerfile
+    image: cppblog:latest
+    container_name: cppblog
+    restart: unless-stopped
+    ports:
+      - "8082:8080"
+
+  blog-staging:
+    build:
+      context: .
+      dockerfile: blog/Dockerfile
+    image: cppblog:staging
+    container_name: cppblog-staging
+    restart: unless-stopped
+    ports:
+      - "8083:8080"

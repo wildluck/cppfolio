@@ -562,5 +562,111 @@
             color: var(--text2);
             line-height: 1.55;
         }
+        /* ── Post ── */
+        .post-header {
+            padding: 3.5rem 0 2.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2.5rem;
+        }
+        .post-title {
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin-bottom: 1rem;
+        }
+        .post-tags {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+        .post-content {
+            max-width: 720px;
+        }
+        .post-content h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 2.5rem 0 0.75rem;
+            color: var(--text);
+        }
+        .post-content h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 2rem 0 0.5rem;
+            color: var(--text);
+        }
+        .post-content p {
+            color: var(--text2);
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+            font-size: 0.97rem;
+        }
+        .post-content pre {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }
+        .post-content code {
+            font-family: var(--mono);
+            font-size: 0.82rem;
+            color: var(--accent);
+            line-height: 1.7;
+        }
+        .post-content ul {
+            color: var(--text2);
+            padding-left: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+        .post-content li {
+            margin-bottom: 0.35rem;
+            font-size: 0.97rem;
+            line-height: 1.75;
+        }
+        .post-content blockquote {
+            border-left: 3px solid var(--accent);
+            padding-left: 1.25rem;
+            color: var(--text2);
+            font-style: italic;
+            margin-bottom: 1.25rem;
+        }
+        /* ── Post card (index) ── */
+        .post-card {
+            display: block;
+            text-decoration: none;
+        }
+        .post-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .post-card-date {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            color: var(--accent);
+        }
+        .post-card-tags {
+            display: flex;
+            gap: 0.35rem;
+            flex-wrap: wrap;
+        }
+        .post-card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.4rem;
+            transition: color var(--transition);
+        }
+        .post-card:hover .post-card-title {
+            color: var(--accent);
+        }
+        .post-card-summary {
+            font-size: 0.88rem;
+            color: var(--text2);
+            line-height: 1.6;
+        }
     </style>
 </head>

@@ -1,5 +1,7 @@
-build/
-generated/
+portfolio/build/
+blog/build/
+portfolio/generated/
+blog/generated/
 .git/
-tests/
+shared/tests/
 *.md

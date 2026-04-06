@@ -1,0 +1,109 @@
+{
+  "slug": "no-os-no-malloc",
+  "title": "No OS, no malloc, no problem — thinking differently about embedded C",
+  "date": "2026-04-06",
+  "summary": "Coming from Linux systems programming, embedded C feels alien at first. No dynamic allocation, no scheduler, no standard library. Here is how I am rewiring my thinking.",
+  "tags": ["C", "STM32", "Embedded", "Linux"],
+  "content": [
+    {
+      "type": "p",
+      "text": "I have spent the last four years writing C for Linux — DPDK packet processing, SPDK storage, kernel networking. Memory is abundant, the OS handles scheduling, and if you need a buffer you just ask for one. Then I picked up an STM32 and everything I knew stopped applying."
+    },
+    {
+      "type": "h2",
+      "text": "The malloc shock"
+    },
+    {
+      "type": "p",
+      "text": "The first thing you notice is that malloc is gone. Not discouraged — gone. On a microcontroller with 20KB of RAM and no MMU, dynamic allocation is a reliability disaster waiting to happen. Heap fragmentation on a device that runs for months without a reset will eventually kill you."
+    },
+    {
+      "type": "p",
+      "text": "The embedded answer is static allocation. Every buffer, every queue, every data structure is declared at compile time with a fixed size. You know exactly how much memory your program uses before you flash it."
+    },
+    {
+      "type": "code",
+      "lang": "c",
+      "text": "// Linux mindset\nchar *buf = malloc(256);\n\n// Embedded mindset\nstatic char buf[256];  // lives forever, size known at compile time"
+    },
+    {
+      "type": "h2",
+      "text": "The stack is everything"
+    },
+    {
+      "type": "p",
+      "text": "On Linux, if you blow the stack the OS catches it with a segfault. On STM32, you just corrupt whatever is below the stack in memory — usually your global variables — and the program silently misbehaves. There is no safety net."
+    },
+    {
+      "type": "p",
+      "text": "This makes you think carefully about stack depth. Deep recursion is out. Large local arrays are suspicious. You develop an instinct for how much stack each function frame uses."
+    },
+    {
+      "type": "h2",
+      "text": "You are the scheduler"
+    },
+    {
+      "type": "p",
+      "text": "With no RTOS, your main loop IS the scheduler. Everything runs sequentially unless an interrupt fires. This is called a superloop and it looks embarrassingly simple:"
+    },
+    {
+      "type": "code",
+      "lang": "c",
+      "text": "int main(void) {\n    hardware_init();\n    while (1) {\n        read_sensors();\n        update_state();\n        drive_outputs();\n    }\n}"
+    },
+    {
+      "type": "p",
+      "text": "The trap is thinking this is naive. For a lot of embedded applications it is exactly right. Complexity only pays when you need real preemption — when one task genuinely cannot wait for another to finish."
+    },
+    {
+      "type": "h2",
+      "text": "volatile is not a joke"
+    },
+    {
+      "type": "p",
+      "text": "In Linux C I used volatile maybe twice in four years. In embedded it is everywhere. When you write to a hardware register, the compiler has no idea that write has a physical effect. Without volatile it will optimise it away."
+    },
+    {
+      "type": "code",
+      "lang": "c",
+      "text": "// Without volatile — compiler may eliminate this write\n*(uint32_t *)0x40020018 = 0x1;\n\n// With volatile — guaranteed to happen\n*(volatile uint32_t *)0x40020018 = 0x1;"
+    },
+    {
+      "type": "p",
+      "text": "The same applies to variables shared between your main loop and an interrupt handler. The interrupt can fire at any time and modify a variable. Without volatile, the compiler caches the value in a register and your main loop never sees the update."
+    },
+    {
+      "type": "h2",
+      "text": "A real example — toggling a GPIO without HAL"
+    },
+    {
+      "type": "p",
+      "text": "HAL hides the registers. Let us not use it. On STM32F4, toggling pin PA5 (the onboard LED on a Nucleo board) looks like this:"
+    },
+    {
+      "type": "code",
+      "lang": "c",
+      "text": "#include <stdint.h>\n\n#define RCC_BASE    0x40023800\n#define RCC_AHB1ENR (*(volatile uint32_t *)(RCC_BASE + 0x30))\n\n#define GPIOA_BASE  0x40020000\n#define GPIOA_MODER (*(volatile uint32_t *)(GPIOA_BASE + 0x00))\n#define GPIOA_ODR   (*(volatile uint32_t *)(GPIOA_BASE + 0x14))\n\nvoid delay(volatile uint32_t n) {\n    while (n--) __asm__(\"nop\");\n}\n\nint main(void) {\n    RCC_AHB1ENR |= (1 << 0);        // enable GPIOA clock\n    GPIOA_MODER |= (1 << 10);       // PA5 as output (bits 11:10 = 01)\n    GPIOA_MODER &= ~(1 << 11);\n\n    while (1) {\n        GPIOA_ODR ^= (1 << 5);      // toggle PA5\n        delay(1000000);\n    }\n}"
+    },
+    {
+      "type": "p",
+      "text": "Every line does exactly one thing to one register. There is no abstraction layer. You learn more from 30 lines like this than from a week of HAL examples."
+    },
+    {
+      "type": "h2",
+      "text": "What transfers from Linux, what does not"
+    },
+    {
+      "type": "p",
+      "text": "What transfers: understanding of memory layout, comfort with pointers and bit manipulation, reading datasheets, thinking about cache and alignment, interrupt-driven thinking from signal handlers and epoll."
+    },
+    {
+      "type": "p",
+      "text": "What does not transfer: the assumption that the OS has your back. On bare metal, nothing catches your mistakes. The hardware does exactly what you tell it — including the wrong things."
+    },
+    {
+      "type": "p",
+      "text": "That is actually what makes it interesting."
+    }
+  ]
+}

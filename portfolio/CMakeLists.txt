@@ -34,5 +34,6 @@ target_include_directories(cppfolio PRIVATE
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/../shared
 )
+
 target_link_libraries(cppfolio PRIVATE Crow::Crow)
 target_compile_options(cppfolio PRIVATE -Wall -Wextra -O2)
