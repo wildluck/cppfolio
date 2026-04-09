@@ -65,7 +65,6 @@
       "description": "Worked on router IoT/SOHO/AP firmware (CLI, NAT subsystem) for the first half, then moved to eNSP Pro (Lite) - Huawei's enterprise network simulation platform - building virtual wireless infrastructure with eBPF and NFQ.",
       "achievements": [
         "Maintained and extended legacy NAT subsystem in C - refactored NAT rule handling and fixed ALG (Application Layer Gateway) parsing for PPTP, FTP, RTSP, and TFTP protocols where standard port-based NAT was insufficient",
-        "Fixed NAT ALG packet classification bugs where L4 port parsing was bypassed in favour of application-layer inspection - restored correct traversal for PPTP, FTP, and DNS protocol flows",
         "Built virtual wireless network infrastructure for eNSP Pro (supports ~20 concurrent virtual devices) using NFQ (nfqd) and eBPF - software-defined packet interception and forwarding between virtual interfaces",
         "Implemented roaming logic for virtual mobile clients between access points - proximity-based AP selection with seamless handoff across the virtual topology",
         "Designed and implemented ebridge - a virtual Ethernet bridge connecting interfaces across two devices into a shared L2 segment, supporting arbitrary interface counts"
@@ -75,16 +74,16 @@
 
   "education": [
     {
-      "institution": "Academic Lyceum under Westminster University in Tashkent",
-      "degree": "Secondary education",
-      "direction": "Exact sciences",
-      "period": "September 2014 - May 2017"
-    },
-    {
       "institution": "Innopolis University",
       "degree": "Bachelor's degree",
       "direction": "Software Engineering",
       "period": "September 2017 - May 2021"
+    },
+    {
+      "institution": "Academic Lyceum under Westminster University in Tashkent",
+      "degree": "Secondary education",
+      "direction": "Exact sciences",
+      "period": "September 2014 - May 2017"
     }
   ],
 
