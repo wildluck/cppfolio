@@ -15,24 +15,24 @@ FetchContent_MakeAvailable(crow)
 
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
-add_custom_target(prebuild_codegen
+add_custom_target(blog_codegen
     COMMAND ${Python3_EXECUTABLE}
-        ${CMAKE_SOURCE_DIR}/../shared/codegen/codegen.py
+        ${CMAKE_CURRENT_SOURCE_DIR}/../shared/codegen/codegen.py
         --project blog
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/..
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..
     COMMENT "Running codegen.py --project blog..."
     BYPRODUCTS
-        ${CMAKE_SOURCE_DIR}/generated/data.hpp
-        ${CMAKE_SOURCE_DIR}/generated/pages.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/generated/data.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/generated/pages.hpp
     VERBATIM
 )
 
 add_executable(cppblog src/main.cpp)
-add_dependencies(cppblog prebuild_codegen)
+add_dependencies(cppblog blog_codegen)
 
 target_include_directories(cppblog PRIVATE
-    ${CMAKE_SOURCE_DIR}
-    ${CMAKE_SOURCE_DIR}/../shared
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../shared
 )
 
 target_link_libraries(cppblog PRIVATE Crow::Crow)

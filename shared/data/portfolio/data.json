@@ -60,14 +60,23 @@
     },
     {
       "company": "Huawei",
-      "role": "Junior Software Engineer",
-      "period": "July 2021 - November 2024",
-      "description": "Worked on router IoT/SOHO/AP firmware (CLI, NAT subsystem) for the first half, then moved to eNSP Pro (Lite) - Huawei's enterprise network simulation platform - building virtual wireless infrastructure with eBPF and NFQ.",
+      "role": "Software Engineer",
+      "period": "January 2023 - November 2024",
+      "description": "Moved to eNSP Pro (Lite) - Huawei's enterprise network simulation platform - building virtual wireless infrastructure with eBPF and NFQ.",
       "achievements": [
-        "Maintained and extended legacy NAT subsystem in C - refactored NAT rule handling and fixed ALG (Application Layer Gateway) parsing for PPTP, FTP, RTSP, and TFTP protocols where standard port-based NAT was insufficient",
         "Built virtual wireless network infrastructure for eNSP Pro (supports ~20 concurrent virtual devices) using NFQ (nfqd) and eBPF - software-defined packet interception and forwarding between virtual interfaces",
         "Implemented roaming logic for virtual mobile clients between access points - proximity-based AP selection with seamless handoff across the virtual topology",
         "Designed and implemented ebridge - a virtual Ethernet bridge connecting interfaces across two devices into a shared L2 segment, supporting arbitrary interface counts"
+      ]
+    },
+    {
+      "company": "Huawei",
+      "role": "Junior Software Engineer",
+      "period": "July 2021 - January 2023",
+      "description": "Worked on router IoT/SOHO/AP firmware - CLI commands and NAT subsystem.",
+      "achievements": [
+        "Maintained and extended legacy NAT subsystem in C - refactored NAT rule handling and fixed ALG (Application Layer Gateway) parsing for PPTP, FTP, and DNS protocols where standard port-based NAT was insufficient",
+        "Fixed NAT ALG packet classification bugs where L4 port parsing was bypassed in favour of application-layer inspection - restored correct traversal for PPTP, FTP, and DNS protocol flows"
       ]
     }
   ],

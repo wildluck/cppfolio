@@ -1,6 +1,7 @@
 # Build output
 portfolio/build/
 blog/build/
+build/
 
 # Generated header
 portfolio/generated/

@@ -15,24 +15,24 @@ FetchContent_MakeAvailable(crow)
 
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
-add_custom_target(prebuild_codegen
+add_custom_target(portfolio_codegen
     COMMAND ${Python3_EXECUTABLE}
-      ${CMAKE_SOURCE_DIR}/../shared/codegen/codegen.py
+      ${CMAKE_CURRENT_SOURCE_DIR}/../shared/codegen/codegen.py
       --project portfolio
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMENT "Running codegen.py... --project portfolio..."
     BYPRODUCTS
-        ${CMAKE_SOURCE_DIR}/generated/data.hpp
-        ${CMAKE_SOURCE_DIR}/generated/pages.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/generated/data.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/generated/pages.hpp
     VERBATIM
 )
 
 add_executable(cppfolio src/main.cpp)
-add_dependencies(cppfolio prebuild_codegen)
+add_dependencies(cppfolio portfolio_codegen)
 
 target_include_directories(cppfolio PRIVATE
-  ${CMAKE_SOURCE_DIR}
-  ${CMAKE_SOURCE_DIR}/../shared
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/../shared
 )
 
 target_link_libraries(cppfolio PRIVATE Crow::Crow)
