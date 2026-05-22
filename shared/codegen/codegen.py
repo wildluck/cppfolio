@@ -596,7 +596,7 @@ def emit_blog_pages_hpp(posts: list[dict]) -> None:
             "META_TITLE": title,
             "meta_description": summary,
             "name": "Rishat Maksudov",
-            "meta_og_image": "/static/og-image.png",
+            "meta_og_image": "/static/og_image.png",
             "site_url": "https://blog.wildluck.dev",
             "NAV_POSTS": "",
         }
@@ -643,7 +643,7 @@ def emit_blog_pages_hpp(posts: list[dict]) -> None:
         "META_TITLE": "Blog",
         "meta_description": "Systems programming, C/C++, embedded, and low-level software.",
         "name": "Rishat Maksudov",
-        "meta_og_image": "/static/og-image.png",
+        "meta_og_image": "/static/og_image.png",
         "site_url": "https://blog.wildluck.dev",
         "NAV_POSTS": "active",
     }

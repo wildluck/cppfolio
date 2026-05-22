@@ -1,31 +1,31 @@
 {
   "name": "Rishat Maksudov",
-  "position": "Software Engineer (C/C++ Developer)",
-  "tagline": "Systems programmer focused on networking and storage.",
+  "position": "Software Engineer - C",
+  "tagline": "Systems C programmer focused on networking and low-level Linux internals.",
   "location": "Tashkent, Uzbekistan",
   "available": "true",
   "available_label": "Available for work",
   "email": "orish.maks@gmail.com",
+  "phone": "+998 90 138 02 49",
   "github": "https://github.com/wildluck",
   "linkedin": "https://www.linkedin.com/in/wildluck",
   "telegram": "McSuudi",
   "cv_pdf": "/static/cv.pdf",
-  "about": "Systems programmer with 4+ years of experience building high-performance network and storage software in C/C++. At Huawei worked deep in the Linux networking stack using DPDK for packet processing. Currently at Wellstor working on storage systems with SPDK. Care about clean low-level code, performance, and understanding how things actually work.",
-  "meta_description": "Portfolio of Rishat Maksudov - C/C++ Software Engineer specialising in networking and storage.",
-  "meta_og_image": "/static/og-image.png",
+  "about": "Systems C programmer focused on networking and low-level Linux internals. 4+ years of production C across router firmware, NAT subsystems, and network virtualization. Comfortable with kernel-adjacent tooling - eBPF, NFQ, io_uring - and across the day-to-day of systems work: debugging, profiling, packaging, and operational glue.",
+  "meta_description": "Portfolio of Rishat Maksudov - Systems C Software Engineer specialising in networking and low-level Linux internals.",
+  "meta_og_image": "/static/og_image.png",
   "site_url": "https://www.wildluck.dev",
 
   "skills_core": [
     { "name": "C" },
-    { "name": "C++" },
     { "name": "Linux/POSIX" },
     { "name": "Networking" },
-    { "name": "DPDK" },
-    { "name": "SPDK" },
     { "name": "eBPF/NFQ" },
-    { "name": "NVMe-oF" },
-    { "name": "Bash/Shell" },
-    { "name": "Python" }
+    { "name": "DPDK/io_uring" },
+    { "name": "NVMe/NVMe-oF" },
+    { "name": "C++" },
+    { "name": "Python" },
+    { "name": "Bash/Shell" }
   ],
   "skills_tools": [
     { "name": "GDB" },
@@ -33,6 +33,7 @@
     { "name": "perf/FlameGraph" },
     { "name": "tcpdump/Wireshark" },
     { "name": "pytest" },
+    { "name": "GoogleTest" },
     { "name": "Make/CMake" },
     { "name": "RPM/Spec" },
     { "name": "systemd" },
@@ -50,33 +51,41 @@
       "company": "Wellstor",
       "role": "Software Engineer",
       "period": "January 2025 - present",
-      "description": "Building block storage software on SPDK - RPC disk management, inter-node heartbeat for configuration consistency, and NVMe/io_uring device handling.",
+      "description": "Work in C on the disk subsystem of a distributed block storage product, contributing inside the SPDK codebase.",
       "achievements": [
-        "Fixed critical blocking bug in disk heartbeat - TCP NVMe-oF connect was synchronous, causing up to ~2 minute stalls per failed node (6 retries × 20s timeout); replaced with non-blocking connect and immediate failover",
-        "Implemented RPC command layer for NVMe and io_uring disk management via SPDK - device discovery, hot-plug handling, and lifecycle control",
-        "Designed inter-node disk heartbeat for configuration synchronisation - coordinates disk topology, splits, and RAID state across cluster nodes before backup commits",
-        "Built disk health validation tooling - sequential and random read/write tests with per-disk pass/fail reporting"
+        "Currently building Prometheus metrics integration for the SPDK service - runtime observability over the disk subsystem",
+        "Added custom SPDK commands and RPCs for disk management - volume splits, RAID creation/management, and related operations",
+        "Designed and implemented a disk heartbeat mechanism across nodes on the multi-node test stand, used to detect disk-level connectivity issues",
+        "Added on-disk metadata for disks and RAID volumes, used to recover and reconfigure previously-added disks from their stored metadata on restart",
+        "Added automatic versioning for individual SPDK modules, so binary compatibility issues can be detected at runtime",
+        "Maintained the SPDK service: RPM .spec packaging and systemd units",
+        "Fixed a lock-up in SPDK's NVMe connection path that occurred when reaching a disk that had become unreachable over the network",
+        "Diagnosed and fixed several memory leaks across the disk subsystem using AddressSanitizer"
       ]
     },
     {
       "company": "Huawei",
       "role": "Software Engineer",
-      "period": "January 2023 - November 2024",
-      "description": "Moved to eNSP Pro (Lite) - Huawei's enterprise network simulation platform - building virtual wireless infrastructure with eBPF and NFQ.",
+      "period": "July 2022 - November 2024",
+      "description": "Continued on the same firmware codebase; scope expanded to the NAT subsystem and the eNSP Pro Lite network simulator.",
       "achievements": [
-        "Built virtual wireless network infrastructure for eNSP Pro (supports ~20 concurrent virtual devices) using NFQ (nfqd) and eBPF - software-defined packet interception and forwarding between virtual interfaces",
-        "Implemented roaming logic for virtual mobile clients between access points - proximity-based AP selection with seamless handoff across the virtual topology",
-        "Designed and implemented ebridge - a virtual Ethernet bridge connecting interfaces across two devices into a shared L2 segment, supporting arbitrary interface counts"
+        "Led the local NAT effort on the router with a small team of two, coordinating with a remote colleague at Huawei China; added the full CLI control surface for NAT configuration, refactored and extended ALG handling in legacy code for FTP, PPTP, RTSP and other protocols, and added new ALGs where needed",
+        "Extended eNSP Pro Lite (enterprise network simulation platform) from its initial device set to cover our AP, SOHO router, IoT devices, and mobile stations",
+        "Implemented virtual wireless connectivity inside the simulator using NFQ packet redirection and eBPF; added a link / physical state protocol for virtual connections",
+        "Simulated wireless environment effects - distance-based signal strength, packet loss, link-state changes - and station roaming, so mobile devices always associate with the strongest available AP",
+        "Built ubridge (a variation of ebridge) for joining interfaces across virtual devices into a single bridge, allowing eNSP Pro Lite to interoperate with external network simulators",
+        "Partnered with DevOps to build a pytest + scapy system-test framework: drive a QEMU-hosted SOHO via configuration fixtures, then validate NAT and IP routing behaviour against captured traffic (scapy, Wireshark)"
       ]
     },
     {
       "company": "Huawei",
       "role": "Junior Software Engineer",
-      "period": "July 2021 - January 2023",
-      "description": "Worked on router IoT/SOHO/AP firmware - CLI commands and NAT subsystem.",
+      "period": "July 2021 - July 2022",
+      "description": "Worked on firmware in C for AP, IoT, and SOHO router devices, focused on the CLI / control plane.",
       "achievements": [
-        "Maintained and extended legacy NAT subsystem in C - refactored NAT rule handling and fixed ALG (Application Layer Gateway) parsing for PPTP, FTP, and DNS protocols where standard port-based NAT was insufficient",
-        "Fixed NAT ALG packet classification bugs where L4 port parsing was bypassed in favour of application-layer inspection - restored correct traversal for PPTP, FTP, and DNS protocol flows"
+        "Implemented IP address configuration and dynamic enable/disable of IP routes on address changes; added handling for link and physical/logical addresses",
+        "Built an ARP table with binary-tree fast lookup over an auto-expanding storage layer",
+        "Wrote GoogleTest unit tests covering the ARP table and surrounding control-plane code - lookup correctness, growth behaviour, edge cases"
       ]
     }
   ],
@@ -98,10 +107,28 @@
 
   "projects": [
     {
-      "name": "CppFolio",
+      "name": "living_dnd",
+      "description": "Persistent D&D simulator: procedural hex terrain, dynamic weather, kingdoms, trade, and D&D 5e mechanical effects.",
+      "url": "https://github.com/wildluck/living_dnd",
+      "tags": ["C++23"]
+    },
+    {
+      "name": "cppfolio",
       "description": "Zero-JS portfolio server in C++23 with Crow. HTML templates and personal data baked into the binary at compile time via a Python codegen step.",
       "url": "https://github.com/wildluck/cppfolio",
-      "tags": ["C++23", "Crow", "CMake", "Python"]
+      "tags": ["C++23", "Crow", "Python"]
+    },
+    {
+      "name": "minibroker",
+      "description": "Lightweight pub/sub message broker: epoll-driven event loop, binary wire protocol, CRC32 integrity checks.",
+      "url": "https://github.com/wildluck/minibroker",
+      "tags": ["C++"]
+    },
+    {
+      "name": "c_chat",
+      "description": "Multi-client TCP chat server in C: epoll reactor, thread pool, SHA-256 password authentication.",
+      "url": "https://github.com/wildluck/c_chat",
+      "tags": ["C"]
     }
   ],
 

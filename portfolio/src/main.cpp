@@ -1,10 +1,25 @@
+#define CROW_DISABLE_STATIC_DIR
 #include <crow.h>
 #include <crow/http_request.h>
 #include <cstdint>
 #include <cstdlib>
+#include <filesystem>
 #include <string>
 
+#include <limits.h>
+#include <unistd.h>
+
 #include "generated/pages.hpp"
+
+// directory of the running executable, so static files resolve regardless of cwd
+static std::filesystem::path exe_dir()
+{
+    char    buf[PATH_MAX];
+    ssize_t n = ::readlink("/proc/self/exe", buf, sizeof(buf));
+    if (n <= 0)
+        return std::filesystem::current_path();
+    return std::filesystem::path(std::string(buf, static_cast<std::size_t>(n))).parent_path();
+}
 
 // helper - every page route goes through this
 template<std::size_t N>
@@ -40,8 +55,17 @@ int main()
         return crow::response{200, "ok"};
     });
 
-    app.route_dynamic("/<path>")(
-        [](const crow::request&, crow::response& res, std::string) {
+    const std::filesystem::path static_dir = exe_dir() / "static";
+    CROW_ROUTE(app, "/static/<path>")(
+        [static_dir](const crow::request&, crow::response& res, std::string file_path) {
+            crow::utility::sanitize_filename(file_path);
+            res.set_static_file_info_unsafe((static_dir / file_path).string());
+            res.end();
+        }
+    );
+
+    CROW_CATCHALL_ROUTE(app)(
+        [](const crow::request&, crow::response& res) {
             res = html_response(portfolio::pages::not_found);
             res.code = 404;
             res.end();

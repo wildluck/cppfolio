@@ -37,3 +37,10 @@ target_include_directories(cppfolio PRIVATE
 
 target_link_libraries(cppfolio PRIVATE Crow::Crow)
 target_compile_options(cppfolio PRIVATE -Wall -Wextra -O2)
+
+add_custom_command(TARGET cppfolio POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+      ${CMAKE_CURRENT_SOURCE_DIR}/static
+      $<TARGET_FILE_DIR:cppfolio>/static
+    COMMENT "Copying static/ next to the cppfolio binary"
+)
